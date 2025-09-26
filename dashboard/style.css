@@ -1,0 +1,184 @@
+/* --- Basic Setup & Fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+body {
+    background-color: #02040a;
+    color: #c1d7e0;
+    font-family: 'Orbitron', sans-serif; /* A futuristic font */
+    margin: 0;
+    padding: 20px;
+    height: 100vh;
+    overflow: hidden; /* Hide scrollbars */
+}
+
+/* --- Animated Background Effects --- */
+.background-effects {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-image: 
+        linear-gradient(rgba(0, 191, 255, 0.1) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 191, 255, 0.1) 1px, transparent 1px);
+    background-size: 30px 30px;
+    animation: moveGrid 20s linear infinite;
+    z-index: -2;
+}
+
+@keyframes moveGrid {
+    from { background-position: 0 0; }
+    to { background-position: 30px 60px; }
+}
+
+.scanline {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(0deg, rgba(0,0,0,0) 0%, rgba(20, 40, 80, 0.3) 50%, rgba(0,0,0,0) 100%);
+    background-size: 100% 4px;
+    animation: flicker 0.1s infinite;
+    z-index: -1;
+}
+
+@keyframes flicker {
+    0% { opacity: 0.9; }
+    50% { opacity: 1; }
+    100% { opacity: 0.9; }
+}
+
+/* --- Main Dashboard Layout --- */
+.dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+        "header header header"
+        "feed orb-area summary";
+    gap: 20px;
+    width: 95%; height: 95%;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Advanced Panel Styling --- */
+.panel {
+    background: rgba(12, 22, 44, 0.7);
+    border: 1px solid #1a3a6e;
+    border-radius: 5px;
+    backdrop-filter: blur(8px);
+    padding: 20px;
+    position: relative;
+    transition: all 0.3s ease; /* Smooth transition for hover */
+}
+
+.panel:hover {
+    transform: translateY(-5px); /* Lift panel on hover */
+    box-shadow: 0 0 25px rgba(0, 191, 255, 0.5);
+}
+
+/* Glowing Corner Brackets */
+.panel::before, .panel::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    border-color: #00bfff;
+    border-style: solid;
+    transition: all 0.3s ease;
+}
+.panel::before { top: -5px; left: -5px; border-width: 2px 0 0 2px; }
+.panel::after { bottom: -5px; right: -5px; border-width: 0 2px 2px 0; }
+.panel:hover::before, .panel:hover::after { border-color: #ffffff; }
+
+/* --- Header Styling --- */
+.header {
+    grid-area: header;
+    text-align: center;
+    font-size: 2em;
+    color: #00bfff;
+    text-shadow: 0 0 10px #00bfff, 0 0 20px #00bfff;
+    letter-spacing: 4px;
+    border: none;
+    background: none;
+    backdrop-filter: none;
+    box-shadow: none;
+}
+.header:hover { transform: none; box-shadow: none; }
+
+/* --- Orb Styling --- */
+.orb-container { grid-area: orb-area; display: flex; justify-content: center; align-items: center; }
+.orb {
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, #00bfff, #0a0e1a 70%);
+    border-radius: 50%;
+    box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff, inset 0 0 30px #0a0e1a;
+    animation: pulse 4s infinite ease-in-out;
+}
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff, inset 0 0 30px #0a0e1a; }
+    50% { transform: scale(1); box-shadow: 0 0 35px #00bfff, 0 0 70px #00bfff, inset 0 0 30px #0a0e1a; }
+    100% { transform: scale(0.95); box-shadow: 0 0 20px #00bfff, 0 0 40px #00bfff, inset 0 0 30px #0a0e1a; }
+}
+
+/* --- Live Feed Styling --- */
+#live-feed h3, #summary h3 {
+    color: #00bfff;
+    text-shadow: 0 0 5px #00bfff;
+    letter-spacing: 2px;
+    margin-top: 0;
+}
+
+.log-entry {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 15px;
+    align-items: center;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 3px;
+    background: rgba(10, 14, 26, 0.8);
+    border-left: 3px solid #00bfff;
+    animation: fadeIn 0.5s ease-in-out;
+}
+.log-entry.warning { border-left-color: #ffc107; box-shadow: 0 0 10px #ffc107; }
+.log-entry.critical { border-left-color: #dc3545; box-shadow: 0 0 10px #dc3545; }
+
+.log-time { font-size: 0.8em; color: #88a1b0; }
+.log-name { font-weight: bold; }
+.log-status { font-size: 0.9em; font-weight: bold; }
+.status-clear { color: #00bfff; }
+.status-warning { color: #ffc107; }
+.status-critical { color: #dc3545; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+/* --- Threat Analysis Detail Styling --- */
+.details-container {
+    margin-top: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+.details-container h4 {
+    color: #ffffff;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #1f2f5a;
+    padding-bottom: 10px;
+    font-size: 1.2em;
+}
+
+.detail-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+}
+
+.detail-key {
+    color: #88a1b0; /* Dimmer color for the label */
+    font-weight: bold;
+}
+
+.detail-value {
+    color: #c1d7e0;
+    word-break: break-all; /* Prevents long paths from overflowing */
+}
